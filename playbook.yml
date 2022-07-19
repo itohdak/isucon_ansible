@@ -1,0 +1,131 @@
+- hosts: server1, server2, server3
+  remote_user: isucon
+  strategy: linear
+
+  tasks:    
+  - name: copy private key and public key to servers
+    copy:
+      src: "{{ item.src }}"
+      dest: "{{ item.dest }}"
+      owner: isucon
+      group: isucon
+      mode: "{{ item.mode }}"
+      backup: yes
+    with_items:
+    - { src: ~/.ssh/isucon_id_rsa, dest: ~/.ssh/id_rsa, mode: '0600' }
+    - { src: ~/.ssh/isucon_id_rsa.pub, dest: ~/.ssh/id_rsa.pub, mode: '0644' }
+
+  - name: add public key to authorized_keys
+    shell: |
+      cat ~/.ssh/id_rsa.pub >> ~/.ssh/authorized_keys
+
+  - name: turn off strict host key checking when accessing github
+    copy:
+      src: "{{ playbook_dir }}/sample.sshconfig"
+      dest: "{{ item.dest }}"
+      owner: "{{ item.owner }}"
+      group: "{{ item.group }}"
+      mode: 0700
+      backup: yes
+    become: yes
+    become_user: "{{ item.owner }}"
+    with_items:
+    - { owner: isucon, group: isucon, dest: ~/.ssh/config }
+
+  - name: copy installation file
+    copy:
+      src: /home/itohdak/sandbox/isucon/isucon_tools/setup/setup.sh
+      dest: /tmp/setup.sh
+      owner: isucon
+      group: isucon
+      mode: 0700
+      backup: yes
+
+  - name: exec installation
+    shell: |
+      sh /tmp/setup.sh
+      rm /tmp/setup.sh
+  
+  - name: deploy .gitconfig
+    copy: 
+      src: "{{ playbook_dir }}/sample.gitconfig"
+      dest: "{{ item.dest }}"
+      owner: "{{ item.owner }}"
+      group: "{{ item.group }}"
+      mode: 0700
+      backup: yes
+    become: yes
+    become_user: "{{ item.owner }}"
+    with_items:
+    - { owner: isucon, group: isucon, dest: ~/.gitconfig }
+  
+  - name: deploy .gitignore
+    copy: 
+      src: "{{ playbook_dir }}/sample.gitignore"
+      dest: ~/.gitignore
+      owner: isucon
+      group: isucon
+      mode: 0700
+      backup: yes
+    when: "(master_slave) == 'master'"
+
+  - name: initialize git repo
+    shell: |
+      git init .
+      git add .
+      git commit -m "initial commit"
+      git branch -M master
+      git remote add origin https://github.com/{{ git_username }}/{{ git_repo_name }}.git
+      git push -u origin master
+    when: "(master_slave) == 'master'"
+
+  - name: setup git 1
+    shell: |
+      git clone https://github.com/{{ git_username }}/{{ git_repo_name }}.git
+    when: "(master_slave) == 'slave'"
+
+  - name: setup git 2
+    shell: |
+      sudo mv {{ git_repo_name }} ../
+      cd ..
+      cp -an isucon/. {{ git_repo_name }}/
+      sudo mv isucon isucon.bak
+      sudo mv {{ git_repo_name }} isucon
+    become: true
+    when: "(master_slave) == 'slave'"
+
+  - name: set hard link
+    shell: |
+      cd
+      mkdir {{ inventory_hostname }}
+      cd {{ inventory_hostname }}
+      sudo ln {{ nginx_conf_file }} ./
+      sudo ln {{ db_conf_file }} ./
+
+  - name: git commit 1
+    shell: |
+      git fetch --all
+      git rebase origin/master
+      git add {{ inventory_hostname }}
+      git commit -m "add {{ inventory_hostname }} config files"
+      git push origin master
+    when: "(server_no) == 1"
+
+  - name: git commit 2
+    shell: |
+      git fetch --all
+      git rebase origin/master
+      git add {{ inventory_hostname }}
+      git commit -m "add {{ inventory_hostname }} config files"
+      git push origin master
+    when: "(server_no) == 2"
+
+  - name: git commit 3
+    shell: |
+      git fetch --all
+      git rebase origin/master
+      git add {{ inventory_hostname }}
+      git commit -m "add {{ inventory_hostname }} config files"
+      git push origin master
+    when: "(server_no) == 3"
+
