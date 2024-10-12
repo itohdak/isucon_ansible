@@ -1,0 +1,6 @@
+- hosts: webapp
+  remote_user: isucon
+  tasks:
+    - import_role:
+        name: pprotein-agent
+        tasks_from: main

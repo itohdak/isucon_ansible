@@ -1,0 +1,33 @@
+[all:vars]
+# ansible_ssh_user=isucon
+git_username=itohdak
+git_repo_name=isucon12_qualify
+db_conf_file=/etc/mysql/mysql.conf.d/mysqld.cnf
+nginx_conf_file=/etc/nginx/nginx.conf
+server_prefix=isu
+nginx_server_no=1
+db_server_no=2
+app_server_no=1
+
+# メインのサーバを指定（1台）
+[server1]
+isucon1
+
+[server1:vars]
+master_slave=master
+server_no=1
+
+# 残りのサーバを指定（2台）
+[server2]
+isucon2
+
+[server2:vars]
+master_slave=slave
+server_no=2
+
+[server3]
+# isucon3
+
+[server3:vars]
+master_slave=slave
+server_no=3

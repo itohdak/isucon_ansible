@@ -1,0 +1,49 @@
+- name: Install slp
+  ansible.builtin.get_url:
+    url: https://github.com/tkuchiki/slp/releases/download/v0.2.0/slp_linux_amd64.tar.gz
+    dest: /tmp/slp_linux_amd64.tar.gz
+
+- name: Unarchive and deploy slp
+  ansible.builtin.unarchive:
+    src: /tmp/slp_linux_amd64.tar.gz
+    dest: /usr/local/bin
+    remote_src: true
+  become: true
+
+- name: Install alp
+  ansible.builtin.get_url:
+    url: https://github.com/tkuchiki/alp/releases/download/v1.0.21/alp_linux_amd64.tar.gz
+    dest: /tmp/alp_linux_amd64.tar.gz
+
+- name: Unarchive and deploy alp
+  ansible.builtin.unarchive:
+    src: /tmp/alp_linux_amd64.tar.gz
+    dest: /usr/local/bin
+    remote_src: true
+  become: true
+
+- name: Install pprotein
+  ansible.builtin.get_url:
+    url: https://github.com/kaz/pprotein/releases/download/v1.2.3/pprotein_1.2.3_linux_amd64.tar.gz
+    dest: /tmp/pprotein_1.2.3_linux_amd64.tar.gz
+
+- name: Unarchive and deploy pprotein
+  ansible.builtin.unarchive:
+    src: /tmp/pprotein_1.2.3_linux_amd64.tar.gz
+    dest: /home/isucon
+    remote_src: true
+  become: true
+
+- name: Deploy pprotein-agent service
+  ansible.builtin.copy:
+    src: etc/systemd/system/pprotein-agent.service
+    dest: /etc/systemd/system/pprotein-agent.service
+  become: true
+
+- name: Enable and start pprotein-agent service
+  ansible.builtin.systemd_service:
+    state: started
+    name: pprotein-agent
+    enabled: true
+    daemon_reload: true
+  become: true

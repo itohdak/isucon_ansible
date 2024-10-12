@@ -1,0 +1,6 @@
+- hosts: pprotein
+  remote_user: isucon
+  tasks:
+    - import_role:
+        name: pprotein
+        tasks_from: main

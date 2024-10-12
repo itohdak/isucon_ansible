@@ -1,0 +1,18 @@
+all:
+  children:
+    nginx:
+      hosts:
+        nginx01:
+          ansible_host: private-isu
+    webapp:
+      hosts:
+        webapp01:
+          ansible_host: private-isu
+    db:
+      hosts:
+        db01:
+          ansible_host: private-isu
+    pprotein:
+      hosts:
+        pprotein01:
+          ansible_host: pprotein
