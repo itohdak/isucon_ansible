@@ -1,0 +1,6 @@
+- hosts: webapp
+  remote_user: isucon
+  tasks:
+    - import_role:
+        name: repo
+        tasks_from: main

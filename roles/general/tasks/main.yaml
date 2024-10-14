@@ -1,0 +1,9 @@
+- name: Install the latest version of graphviz, gv and netdata
+  ansible.builtin.apt:
+    name:
+      - graphviz
+      - gv
+      - netdata
+    state: latest
+    update_cache: yes
+  become: true

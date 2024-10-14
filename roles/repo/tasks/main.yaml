@@ -1,0 +1,58 @@
+# webapp配下の必要そうなファイルとフォルダを、repo/app配下にコピー
+# env.shがあれば、それをrepo/common配下にコピー
+# $HOSTNAMEの変更
+# git add .
+# git commit -m "initial commit"
+# netdata見られない問題
+
+# - name: Clone repo
+#   git:
+#     repo: https://github.com/itohdak/isucon11_qualify_practice.git
+#     dest: /home/isucon/repo
+
+- name: Copy private key and public key to servers
+  copy:
+    src: "{{ item.src }}"
+    dest: "{{ item.dest }}"
+    owner: isucon
+    group: isucon
+    mode: "{{ item.mode }}"
+    backup: yes
+  with_items:
+  - { src: ~/.ssh/isucon_id_rsa, dest: ~/.ssh/id_rsa, mode: '0600' }
+  - { src: ~/.ssh/isucon_id_rsa.pub, dest: ~/.ssh/id_rsa.pub, mode: '0644' }
+
+- name: add public key to authorized_keys
+  shell: |
+    cat ~/.ssh/id_rsa.pub >> ~/.ssh/authorized_keys
+
+- name: Turn off strict host key checking when accessing github
+  copy:
+    src: .ssh/config
+    dest: ~/.ssh/config
+    owner: isucon
+    group: isucon
+    mode: 0700
+    backup: yes
+  become: yes
+  become_user: isucon
+
+- name: Deploy .gitconfig
+  copy:
+    src: .gitconfig
+    dest: ~/.gitconfig
+    owner: isucon
+    group: isucon
+    mode: 0700
+    backup: yes
+  become: yes
+  become_user: isucon
+
+# - name: Deploy .gitignore
+#   copy: 
+#     src: .gitignore
+#     dest: ~/.gitignore
+#     owner: isucon
+#     group: isucon
+#     mode: 0700
+#     backup: yes

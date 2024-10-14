@@ -3,15 +3,15 @@ all:
     nginx:
       hosts:
         nginx01:
-          ansible_host: private-isu
+          ansible_host: isucon11
     webapp:
       hosts:
         webapp01:
-          ansible_host: private-isu
+          ansible_host: isucon11
     db:
       hosts:
         db01:
-          ansible_host: private-isu
+          ansible_host: isucon11
     pprotein:
       hosts:
         pprotein01:

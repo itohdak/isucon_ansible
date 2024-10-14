@@ -2,13 +2,13 @@
   {
     "Type": "pprof",
     "Label": "webapp",
-    "URL": "http://{{ webapp_private_ip }}:8080/debug/pprof/profile",
+    "URL": "http://{{ webapp_private_ip }}:8888/debug/pprof/profile",
     "Duration": 60
   },
   {
     "Type": "httplog",
     "Label": "nginx",
-    "URL": "http://{{ nginx_private_ip }}:8080/debug/log/httplog",
+    "URL": "http://{{ nginx_private_ip }}:19000/debug/log/httplog",
     "Duration": 60
   },
   {

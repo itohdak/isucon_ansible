@@ -1,12 +1,3 @@
-- name: Install the latest version of graphviz and gv
-  ansible.builtin.apt:
-    name:
-      - graphviz
-      - gv
-    state: latest
-    update_cache: yes
-  become: true
-
 - name: Install slp
   ansible.builtin.get_url:
     url: https://github.com/tkuchiki/slp/releases/download/v0.2.0/slp_linux_amd64.tar.gz
