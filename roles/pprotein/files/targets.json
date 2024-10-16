@@ -1,0 +1,56 @@
+[
+  {
+    "Type": "pprof",
+    "Label": "webapp",
+    "URL": "http://s1.maca.jp:8888/debug/pprof/profile",
+    "Duration": 60
+  },
+  {
+    "Type": "httplog",
+    "Label": "nginx",
+    "URL": "http://s1.maca.jp:19000/debug/log/httplog",
+    "Duration": 60
+  },
+  {
+    "Type": "slowlog",
+    "Label": "mysql",
+    "URL": "http://s1.maca.jp:19000/debug/log/slowlog",
+    "Duration": 60
+  }
+  {
+    "Type": "pprof",
+    "Label": "webapp",
+    "URL": "http://s2.maca.jp:8888/debug/pprof/profile",
+    "Duration": 60
+  },
+  {
+    "Type": "httplog",
+    "Label": "nginx",
+    "URL": "http://s2.maca.jp:19000/debug/log/httplog",
+    "Duration": 60
+  },
+  {
+    "Type": "slowlog",
+    "Label": "mysql",
+    "URL": "http://s2.maca.jp:19000/debug/log/slowlog",
+    "Duration": 60
+  }
+  {
+    "Type": "pprof",
+    "Label": "webapp",
+    "URL": "http://s3.maca.jp:8888/debug/pprof/profile",
+    "Duration": 60
+  },
+  {
+    "Type": "httplog",
+    "Label": "nginx",
+    "URL": "http://s3.maca.jp:19000/debug/log/httplog",
+    "Duration": 60
+  },
+  {
+    "Type": "slowlog",
+    "Label": "mysql",
+    "URL": "http://s3.maca.jp:19000/debug/log/slowlog",
+    "Duration": 60
+  }
+]

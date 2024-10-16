@@ -49,8 +49,8 @@
   become: true
 
 - name: Deploy targets.json
-  ansible.builtin.template:
-    src: templates/targets.json.j2
+  ansible.builtin.copy:
+    src: targets.json
     dest: /home/isucon/data/targets.json
   become: true
 
