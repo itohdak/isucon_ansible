@@ -16,7 +16,7 @@
     "Label": "mysql",
     "URL": "http://s1.maca.jp:19000/debug/log/slowlog",
     "Duration": 60
-  }
+  },
   {
     "Type": "pprof",
     "Label": "webapp",
@@ -34,7 +34,7 @@
     "Label": "mysql",
     "URL": "http://s2.maca.jp:19000/debug/log/slowlog",
     "Duration": 60
-  }
+  },
   {
     "Type": "pprof",
     "Label": "webapp",
