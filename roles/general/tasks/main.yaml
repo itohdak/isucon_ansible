@@ -7,3 +7,22 @@
     state: latest
     update_cache: yes
   become: true
+
+- name: Update netdata config
+  ansible.builtin.copy:
+    src: etc/netdata/netdata.conf
+    dest: /etc/netdata/netdata.conf
+    backup: true
+  become: true
+
+- name: Restart netdata service
+  ansible.builtin.shell: systemctl restart netdata
+  become: true
+
+- name: Update /etc/hosts
+  ansible.builtin.shell: |
+    echo 192.168.0.11  s1.maca.jp >> /etc/hosts
+    echo 192.168.0.12  s2.maca.jp >> /etc/hosts
+    echo 192.168.0.13  s3.maca.jp >> /etc/hosts
+    echo 192.168.0.178 pprotein.maca.jp >> /etc/hosts
+  become: true
