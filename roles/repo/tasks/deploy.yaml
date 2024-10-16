@@ -1,0 +1,4 @@
+# netdata見られない問題
+
+- name: deploy
+  ansible.builtin.shell: make deploy BRANCH={{ branch }}

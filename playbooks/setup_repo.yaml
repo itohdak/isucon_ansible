@@ -3,4 +3,4 @@
   tasks:
     - import_role:
         name: repo
-        tasks_from: deploy
+        tasks_from: setup
