@@ -1,0 +1,24 @@
+- hosts: all
+  remote_user: isucon
+  tasks:
+    - import_role:
+        name: general
+        tasks_from: main
+- hosts: pprotein
+  remote_user: isucon
+  tasks:
+    - import_role:
+        name: pprotein
+        tasks_from: main
+- hosts: webapp
+  remote_user: isucon
+  tasks:
+    - import_role:
+        name: pprotein-agent
+        tasks_from: main
+- hosts: webapp
+  remote_user: isucon
+  tasks:
+    - import_role:
+        name: repo
+        tasks_from: setup
