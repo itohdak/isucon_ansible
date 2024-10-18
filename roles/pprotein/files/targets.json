@@ -1,55 +1,55 @@
 [
   {
     "Type": "pprof",
-    "Label": "webapp",
+    "Label": "webapp-s1",
     "URL": "http://s1.maca.jp:8888/debug/pprof/profile",
     "Duration": 60
   },
   {
     "Type": "httplog",
-    "Label": "nginx",
+    "Label": "nginx-s1",
     "URL": "http://s1.maca.jp:19000/debug/log/httplog",
     "Duration": 60
   },
   {
     "Type": "slowlog",
-    "Label": "mysql",
+    "Label": "mysql-s1",
     "URL": "http://s1.maca.jp:19000/debug/log/slowlog",
     "Duration": 60
   },
   {
     "Type": "pprof",
-    "Label": "webapp",
+    "Label": "webapp-s2",
     "URL": "http://s2.maca.jp:8888/debug/pprof/profile",
     "Duration": 60
   },
   {
     "Type": "httplog",
-    "Label": "nginx",
+    "Label": "nginx-s2",
     "URL": "http://s2.maca.jp:19000/debug/log/httplog",
     "Duration": 60
   },
   {
     "Type": "slowlog",
-    "Label": "mysql",
+    "Label": "mysql-s2",
     "URL": "http://s2.maca.jp:19000/debug/log/slowlog",
     "Duration": 60
   },
   {
     "Type": "pprof",
-    "Label": "webapp",
+    "Label": "webapp-s3",
     "URL": "http://s3.maca.jp:8888/debug/pprof/profile",
     "Duration": 60
   },
   {
     "Type": "httplog",
-    "Label": "nginx",
+    "Label": "nginx-s3",
     "URL": "http://s3.maca.jp:19000/debug/log/httplog",
     "Duration": 60
   },
   {
     "Type": "slowlog",
-    "Label": "mysql",
+    "Label": "mysql-s3",
     "URL": "http://s3.maca.jp:19000/debug/log/slowlog",
     "Duration": 60
   }
