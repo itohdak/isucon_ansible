@@ -1,0 +1,52 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Ansible Deploy</title>
+    <script>
+        async function runScript() {
+            // 入力値を取得
+            const param = document.getElementById('paramInput').value;
+
+            // 出力結果を表示する要素を取得
+            const resultDiv = document.getElementById('result');
+            resultDiv.textContent = "Executing ansible script...";
+
+            try {
+                // サーバーにリクエストを送信
+                const response = await fetch('/run-script', {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json'
+                    },
+                    body: JSON.stringify({ param }) // JSON形式で送信
+                });
+
+                // サーバーからのレスポンスを取得
+                const result = await response.json();
+
+                if (result.status === 'success') {
+                    resultDiv.textContent = 'Script executed successfully:\n' + result.stdout;
+                } else {
+                    resultDiv.textContent = 'Error:\n' + result.stderr;
+                }
+            } catch (error) {
+                resultDiv.textContent = 'Failed to execute script:\n' + error.message;
+            }
+        }
+    </script>
+</head>
+<body>
+    <h1>Ansible Deploy</h1>
+
+    <!-- パラメータ入力フォーム -->
+    <label for="paramInput">Branch name:</label>
+    <input type="text" id="paramInput" placeholder="main">
+    <button onclick="runScript()">Execute</button>
+
+    <!-- 実行結果を表示 -->
+    <h2>Result:</h2>
+    <pre id="result" style="border: 1px solid #ccc; padding: 10px; background: #f9f9f9;"></pre>
+</body>
+</html>

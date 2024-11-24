@@ -59,3 +59,35 @@
     src: alp.yaml
     dest: /home/isucon/data/alp.yml
   become: true
+
+- name: Copy ansible files
+  ansible.builtin.copy:
+    src: ansible_frontend
+    dest: /home/isucon/
+    owner: isucon
+    group: isucon
+    mode: '0777'
+
+- name: Install and setup ansible
+  ansible.builtin.shell: |
+    # apt update
+    # apt install software-properties-common
+    apt-add-repository --yes --update ppa:ansible/ansible
+    apt install -y ansible
+    echo 192.168.0.11 s1 >> /etc/hosts
+    echo 192.168.0.12 s2 >> /etc/hosts
+    echo 192.168.0.13 s3 >> /etc/hosts
+  become: true
+
+- name: Git clone
+  ansible.builtin.shell: |
+    git clone https://github.com/itohdak/isucon_ansible.git
+
+- name: Install flask python package
+  ansible.builtin.pip:
+    name: flask
+    executable: /home/isucon/local/python/bin/pip
+
+- name: Execute app
+  ansible.builtin.shell: |
+    nohup /home/isucon/local/python/bin/python /home/isucon/ansible_frontend/app.py > /home/isucon/ansible_frontend/out.log 2> /home/isucon/ansible_frontend/error.log &
