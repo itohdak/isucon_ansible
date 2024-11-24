@@ -35,3 +35,11 @@
     backup: yes
   become: yes
   become_user: isucon
+
+- name: clone repo
+  shell: |
+    git init
+    git remote add origin https://github.com/itohdak/{{ git_repo_name }}.git
+    git checkout -b main
+    git fetch --all
+    git reset --hard origin/main
