@@ -83,11 +83,16 @@
   ansible.builtin.shell: |
     git clone https://github.com/itohdak/isucon_ansible.git
 
-- name: Install flask python package
-  ansible.builtin.pip:
-    name: flask
-    executable: /home/isucon/local/python/bin/pip
+- name: Deploy ansible-frontend service
+  ansible.builtin.copy:
+    src: etc/systemd/system/ansible-frontend.service
+    dest: /etc/systemd/system/ansible-frontend.service
+  become: true
 
-- name: Execute app
-  ansible.builtin.shell: |
-    nohup /home/isucon/local/python/bin/python /home/isucon/ansible_frontend/app.py > /home/isucon/ansible_frontend/out.log 2> /home/isucon/ansible_frontend/error.log &
+- name: Enable and start ansible-frontend service
+  ansible.builtin.systemd_service:
+    state: started
+    name: ansible-frontend
+    enabled: true
+    daemon_reload: true
+  become: true
