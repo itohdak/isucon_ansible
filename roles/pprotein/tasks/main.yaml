@@ -39,6 +39,7 @@
     src: etc/systemd/system/pprotein.service
     dest: /etc/systemd/system/pprotein.service
   become: true
+  when: inventory_hostname in groups['pprotein']
 
 - name: Enable and start pprotein service
   ansible.builtin.systemd_service:
@@ -47,18 +48,37 @@
     enabled: true
     daemon_reload: true
   become: true
+  when: inventory_hostname in groups['pprotein']
+
+- name: Deploy pprotein-agent service
+  ansible.builtin.copy:
+    src: etc/systemd/system/pprotein-agent.service
+    dest: /etc/systemd/system/pprotein-agent.service
+  become: true
+  when: inventory_hostname in groups['webapp']
+
+- name: Enable and start pprotein-agent service
+  ansible.builtin.systemd_service:
+    state: started
+    name: pprotein-agent
+    enabled: true
+    daemon_reload: true
+  become: true
+  when: inventory_hostname in groups['webapp']
 
 - name: Deploy targets.json
   ansible.builtin.copy:
     src: targets.json
     dest: /home/isucon/data/targets.json
   become: true
+  when: inventory_hostname in groups['pprotein']
 
 - name: Deploy alp.yaml
   ansible.builtin.copy:
     src: alp.yaml
     dest: /home/isucon/data/alp.yml
   become: true
+  when: inventory_hostname in groups['pprotein']
 
 - name: Copy ansible files
   ansible.builtin.copy:
@@ -67,6 +87,7 @@
     owner: isucon
     group: isucon
     mode: '0777'
+  when: inventory_hostname in groups['pprotein']
 
 - name: Install and setup ansible
   ansible.builtin.shell: |
@@ -78,16 +99,19 @@
     echo 192.168.0.12 s2 >> /etc/hosts
     echo 192.168.0.13 s3 >> /etc/hosts
   become: true
+  when: inventory_hostname in groups['pprotein']
 
 - name: Git clone
   ansible.builtin.shell: |
     git clone https://github.com/itohdak/isucon_ansible.git
+  when: inventory_hostname in groups['pprotein']
 
 - name: Deploy ansible-frontend service
   ansible.builtin.copy:
     src: etc/systemd/system/ansible-frontend.service
     dest: /etc/systemd/system/ansible-frontend.service
   become: true
+  when: inventory_hostname in groups['pprotein']
 
 - name: Enable and start ansible-frontend service
   ansible.builtin.systemd_service:
@@ -96,3 +120,4 @@
     enabled: true
     daemon_reload: true
   become: true
+  when: inventory_hostname in groups['pprotein']
