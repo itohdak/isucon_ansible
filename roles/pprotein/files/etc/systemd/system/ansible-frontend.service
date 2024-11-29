@@ -4,9 +4,9 @@ Description=ansible frontend service
 [Service]
 ExecStart=/home/isucon/ansible_frontend/ansible_frontend
 WorkingDirectory=/home/isucon
-Environment=PATH=$PATH:/usr/local/bin
+Environment=PATH=$PATH:/usr/bin
 Restart=always
-User=root
+User=isucon
 
 [Install]
 WantedBy=multi-user.target

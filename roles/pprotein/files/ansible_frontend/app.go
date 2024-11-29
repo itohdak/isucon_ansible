@@ -41,13 +41,13 @@ func runScriptHandler(w http.ResponseWriter, r *http.Request) {
 
 	response := ResponseData{
 		Status: "success",
-		Stdout: string(cmdOutput),
+		Stdout: fmt.Sprintf("stdout:\n%s\nstderr:\n%v", cmdOutput, err),
 	}
 
-	if err != nil {
-		response.Status = "error"
-		response.Message = err.Error()
-	}
+	// if err != nil {
+	//      response.Status = "error"
+	//      response.Message = err.Error()
+	// }
 
 	w.Header().Set("Content-Type", "application/json")
 	w.WriteHeader(http.StatusOK)
