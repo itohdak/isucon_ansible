@@ -1,23 +1,7 @@
-[all]
-pprotein
-s1
-s2
-s3
-
 [pprotein]
 pprotein
 
 [webapp]
-s1
-s2
-s3
-
-[db]
-s1
-s2
-s3
-
-[nginx]
 s1
 s2
 s3
