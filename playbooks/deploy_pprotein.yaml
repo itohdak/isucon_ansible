@@ -1,4 +1,4 @@
-- hosts: pprotein:webapp
+- hosts: pprotein:webapp:db
   tasks:
     - import_role:
         name: pprotein

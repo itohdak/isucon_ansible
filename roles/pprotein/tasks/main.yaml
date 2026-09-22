@@ -74,7 +74,7 @@
     src: etc/systemd/system/pprotein-agent.service
     dest: /etc/systemd/system/pprotein-agent.service
   become: true
-  when: inventory_hostname in groups['webapp']
+  when: inventory_hostname in groups['webapp'] or inventory_hostname in (groups['db'] | default([]))
 
 - name: Enable and start pprotein-agent service
   ansible.builtin.systemd_service:
@@ -83,7 +83,7 @@
     enabled: true
     daemon_reload: true
   become: true
-  when: inventory_hostname in groups['webapp']
+  when: inventory_hostname in groups['webapp'] or inventory_hostname in (groups['db'] | default([]))
 
 - name: Deploy targets.json
   ansible.builtin.copy:
