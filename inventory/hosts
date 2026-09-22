@@ -1,7 +1,12 @@
+[all:vars]
+ansible_user=ubuntu
+ansible_ssh_private_key_file=/home/itohdak/Downloads/isucon.pem
+
 [pprotein]
-pprotein
+s2 ansible_host=35.78.44.172 private_ip=192.168.0.12
 
 [webapp]
-s1
-s2
-s3
+s1 ansible_host=13.230.132.249 private_ip=192.168.0.11
+
+[db]
+s3 ansible_host=18.176.6.65 private_ip=192.168.0.13
