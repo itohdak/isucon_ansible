@@ -1,0 +1,5 @@
+# API key children use to authenticate when streaming metrics to the
+# netdata parent (the host in the `pprotein` inventory group). It only
+# needs to match between parent and children; regenerate with `uuidgen`
+# if you want a fresh one (e.g. before a new competition).
+netdata_stream_api_key: c245bd0d-2025-42cd-ab32-43273d85b8a3

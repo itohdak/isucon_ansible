@@ -1,0 +1,8 @@
+# Managed by ansible (roles/general). This host streams its metrics
+# to the netdata parent ({{ groups['pprotein'][0] }}) so resource usage
+# can be checked from one place during a benchmark run.
+[stream]
+    enabled = yes
+    destination = {{ hostvars[groups['pprotein'][0]].private_ip }}:19999
+    api key = {{ netdata_stream_api_key }}
+    timeout seconds = 60

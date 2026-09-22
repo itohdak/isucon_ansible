@@ -11,6 +11,10 @@
 #
 
 [global]
+        # Pin the reported hostname to the ansible inventory name (e.g. s1,
+        # s2) so it stays stable and predictable when this host's metrics
+        # are queried through the netdata parent on the pprotein host.
+        hostname = {{ inventory_hostname }}
         run as user = netdata
         web files owner = root
         web files group = root

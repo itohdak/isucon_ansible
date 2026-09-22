@@ -1,23 +1,56 @@
-- name: Install the latest version of graphviz, gv and netdata
+- name: Install the latest version of graphviz and gv
   ansible.builtin.apt:
     name:
       - graphviz
       - gv
-      - netdata
     state: latest
     update_cache: yes
   become: true
 
+- name: Install the latest version of netdata
+  ansible.builtin.apt:
+    name: netdata
+    state: latest
+    update_cache: yes
+  become: true
+  tags: [netdata]
+
 - name: Update netdata config
-  ansible.builtin.copy:
-    src: etc/netdata/netdata.conf
+  ansible.builtin.template:
+    src: netdata.conf.j2
     dest: /etc/netdata/netdata.conf
     backup: true
   become: true
+  tags: [netdata]
+
+- name: Deploy netdata stream config (parent, receives metrics from other instances)
+  ansible.builtin.template:
+    src: stream.conf.parent.j2
+    dest: /etc/netdata/stream.conf
+    owner: netdata
+    group: netdata
+    mode: '0640'
+    backup: true
+  become: true
+  when: inventory_hostname in groups['pprotein']
+  tags: [netdata]
+
+- name: Deploy netdata stream config (child, streams metrics to the pprotein host)
+  ansible.builtin.template:
+    src: stream.conf.child.j2
+    dest: /etc/netdata/stream.conf
+    owner: netdata
+    group: netdata
+    mode: '0640'
+    backup: true
+  become: true
+  when: inventory_hostname not in groups['pprotein']
+  tags: [netdata]
 
 - name: Restart netdata service
   ansible.builtin.shell: systemctl restart netdata
   become: true
+  tags: [netdata]
 
 - name: Update /etc/hosts
   ansible.builtin.shell: |
