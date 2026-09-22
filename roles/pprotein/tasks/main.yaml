@@ -34,6 +34,25 @@
     remote_src: true
   become: true
 
+- name: Ensure pprotein data directory exists
+  ansible.builtin.file:
+    path: /home/isucon/data
+    state: directory
+    owner: isucon
+    group: isucon
+    mode: '0755'
+  become: true
+
+- name: Register ISUCON host aliases
+  ansible.builtin.blockinfile:
+    path: /etc/hosts
+    marker: "# {mark} ISUCON hosts managed by ansible"
+    block: |
+      {% for host in groups['pprotein'] + groups['webapp'] %}
+      {{ hostvars[host].private_ip | default(hostvars[host].ansible_host) }} {{ host }}
+      {% endfor %}
+  become: true
+
 - name: Deploy pprotein service
   ansible.builtin.copy:
     src: etc/systemd/system/pprotein.service
@@ -70,6 +89,9 @@
   ansible.builtin.copy:
     src: targets.json
     dest: /home/isucon/data/targets.json
+    owner: isucon
+    group: isucon
+    mode: '0644'
   become: true
   when: inventory_hostname in groups['pprotein']
 
@@ -77,6 +99,9 @@
   ansible.builtin.copy:
     src: alp.yaml
     dest: /home/isucon/data/alp.yml
+    owner: isucon
+    group: isucon
+    mode: '0644'
   become: true
   when: inventory_hostname in groups['pprotein']
 
@@ -87,31 +112,37 @@
     owner: isucon
     group: isucon
     mode: '0777'
+  become: true
   when: inventory_hostname in groups['pprotein']
 
 - name: Install and setup ansible
   ansible.builtin.shell: |
-    # apt update
-    # apt install software-properties-common
     apt-add-repository --yes --update ppa:ansible/ansible
     apt install -y ansible
-    echo 192.168.0.11 s1 >> /etc/hosts
-    echo 192.168.0.12 s2 >> /etc/hosts
-    echo 192.168.0.13 s3 >> /etc/hosts
   become: true
-  when: inventory_hostname in groups['pprotein']
+  when:
+    - inventory_hostname in groups['pprotein']
+    - pprotein_install_ansible_frontend | default(false)
 
 - name: Git clone
   ansible.builtin.shell: |
-    git clone https://github.com/itohdak/isucon_ansible.git
-  when: inventory_hostname in groups['pprotein']
+    git clone https://github.com/itohdak/isucon_ansible.git /home/isucon/isucon_ansible
+  become: true
+  become_user: isucon
+  args:
+    creates: /home/isucon/isucon_ansible
+  when:
+    - inventory_hostname in groups['pprotein']
+    - pprotein_install_ansible_frontend | default(false)
 
 - name: Deploy ansible-frontend service
   ansible.builtin.copy:
     src: etc/systemd/system/ansible-frontend.service
     dest: /etc/systemd/system/ansible-frontend.service
   become: true
-  when: inventory_hostname in groups['pprotein']
+  when:
+    - inventory_hostname in groups['pprotein']
+    - pprotein_install_ansible_frontend | default(false)
 
 - name: Enable and start ansible-frontend service
   ansible.builtin.systemd_service:
@@ -120,4 +151,6 @@
     enabled: true
     daemon_reload: true
   become: true
-  when: inventory_hostname in groups['pprotein']
+  when:
+    - inventory_hostname in groups['pprotein']
+    - pprotein_install_ansible_frontend | default(false)

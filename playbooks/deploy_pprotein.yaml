@@ -1,5 +1,4 @@
-- hosts: pprotein
-  remote_user: isucon
+- hosts: pprotein:webapp
   tasks:
     - import_role:
         name: pprotein

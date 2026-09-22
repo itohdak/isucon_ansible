@@ -1,5 +1,7 @@
 - hosts: webapp
   remote_user: isucon
+  vars:
+    ansible_user: isucon
   tasks:
     - import_role:
         name: repo
