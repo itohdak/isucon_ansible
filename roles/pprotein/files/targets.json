@@ -13,8 +13,8 @@
   },
   {
     "Type": "slowlog",
-    "Label": "mysql-s2",
-    "URL": "http://s2:19000/debug/log/slowlog",
+    "Label": "mysql-s1",
+    "URL": "http://s1:19000/debug/log/slowlog",
     "Duration": 60
   }
 ]
