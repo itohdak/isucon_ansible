@@ -48,7 +48,7 @@
     path: /etc/hosts
     marker: "# {mark} ISUCON hosts managed by ansible"
     block: |
-      {% for host in groups['pprotein'] + groups['webapp'] %}
+      {% for host in groups['pprotein'] + groups['webapp'] + (groups['db'] | default([])) %}
       {{ hostvars[host].private_ip | default(hostvars[host].ansible_host) }} {{ host }}
       {% endfor %}
   become: true
