@@ -7,30 +7,32 @@
     update_cache: yes
   become: true
 
-- name: Install the latest version of netdata (apt, non-db hosts)
+- name: Install the latest version of netdata (apt, pprotein/bench hosts only)
   ansible.builtin.apt:
     name: netdata
     state: latest
     update_cache: yes
   become: true
-  when: inventory_hostname not in groups['db']
+  when: inventory_hostname not in (groups['db'] + groups['webapp'])
   tags: [netdata]
 
 # The Ubuntu-repo netdata package (netdata-core/-plugins-bash/-plugins-python)
-# does not ship go.d.plugin at all, so it has no MySQL collector. The db host
-# needs real MySQL metrics (connections, InnoDB buffer pool, etc.) alongside
-# OS metrics, so it uses netdata's official kickstart installer instead,
-# which bundles go.d.plugin. Both install methods use the same /etc/netdata
+# does not ship go.d.plugin at all, so it has no MySQL collector and its
+# apps.plugin process-group defaults are older/less granular. The db and
+# webapp hosts (the two load-targeted hosts, kept symmetric with each other
+# deliberately) use netdata's official kickstart installer instead, which
+# bundles go.d.plugin. Both install methods use the same /etc/netdata
 # layout, so the rest of this role (hostname/stream config below) is
-# unaffected by which install path a host took.
-- name: Check whether netdata was already installed via the official kickstart installer (db hosts)
+# unaffected by which install path a host took. The pprotein/bench host
+# doesn't need this and stays on the plain apt package.
+- name: Check whether netdata was already installed via the official kickstart installer (db + webapp hosts)
   ansible.builtin.stat:
     path: /usr/libexec/netdata/netdata-updater.sh
   register: netdata_kickstart_installed
-  when: inventory_hostname in groups['db']
+  when: inventory_hostname in (groups['db'] + groups['webapp'])
   tags: [netdata]
 
-- name: Purge Ubuntu apt-packaged netdata on db hosts, if present (lacks go.d.plugin)
+- name: Purge Ubuntu apt-packaged netdata on db + webapp hosts, if present (lacks go.d.plugin)
   ansible.builtin.apt:
     name:
       - netdata
@@ -41,21 +43,21 @@
     state: absent
     purge: yes
   become: true
-  when: inventory_hostname in groups['db'] and not netdata_kickstart_installed.stat.exists
+  when: inventory_hostname in (groups['db'] + groups['webapp']) and not netdata_kickstart_installed.stat.exists
   tags: [netdata]
 
-- name: Download netdata official kickstart installer (db hosts)
+- name: Download netdata official kickstart installer (db + webapp hosts)
   ansible.builtin.get_url:
     url: https://get.netdata.cloud/kickstart.sh
     dest: /tmp/netdata-kickstart.sh
     mode: '0755'
-  when: inventory_hostname in groups['db'] and not netdata_kickstart_installed.stat.exists
+  when: inventory_hostname in (groups['db'] + groups['webapp']) and not netdata_kickstart_installed.stat.exists
   tags: [netdata]
 
-- name: Install netdata via official kickstart installer (db hosts, for go.d.plugin/MySQL collector)
+- name: Install netdata via official kickstart installer (db + webapp hosts, for go.d.plugin/MySQL collector)
   ansible.builtin.command: sh /tmp/netdata-kickstart.sh --non-interactive --stable-channel --disable-telemetry
   become: true
-  when: inventory_hostname in groups['db'] and not netdata_kickstart_installed.stat.exists
+  when: inventory_hostname in (groups['db'] + groups['webapp']) and not netdata_kickstart_installed.stat.exists
   tags: [netdata]
 
 - name: Update netdata config
