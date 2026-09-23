@@ -1,6 +1,6 @@
 [all:vars]
 ansible_user=ubuntu
-ansible_ssh_private_key_file=/home/itohdak/Downloads/isucon.pem
+ansible_ssh_private_key_file=/home/itohdak/.ssh/isucon.pem
 
 [pprotein]
 s3 ansible_host=35.73.191.95 private_ip=192.168.0.13
