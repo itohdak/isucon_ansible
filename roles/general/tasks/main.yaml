@@ -7,12 +7,55 @@
     update_cache: yes
   become: true
 
-- name: Install the latest version of netdata
+- name: Install the latest version of netdata (apt, non-db hosts)
   ansible.builtin.apt:
     name: netdata
     state: latest
     update_cache: yes
   become: true
+  when: inventory_hostname not in groups['db']
+  tags: [netdata]
+
+# The Ubuntu-repo netdata package (netdata-core/-plugins-bash/-plugins-python)
+# does not ship go.d.plugin at all, so it has no MySQL collector. The db host
+# needs real MySQL metrics (connections, InnoDB buffer pool, etc.) alongside
+# OS metrics, so it uses netdata's official kickstart installer instead,
+# which bundles go.d.plugin. Both install methods use the same /etc/netdata
+# layout, so the rest of this role (hostname/stream config below) is
+# unaffected by which install path a host took.
+- name: Check whether netdata was already installed via the official kickstart installer (db hosts)
+  ansible.builtin.stat:
+    path: /usr/libexec/netdata/netdata-updater.sh
+  register: netdata_kickstart_installed
+  when: inventory_hostname in groups['db']
+  tags: [netdata]
+
+- name: Purge Ubuntu apt-packaged netdata on db hosts, if present (lacks go.d.plugin)
+  ansible.builtin.apt:
+    name:
+      - netdata
+      - netdata-core
+      - netdata-plugins-bash
+      - netdata-plugins-python
+      - netdata-web
+    state: absent
+    purge: yes
+  become: true
+  when: inventory_hostname in groups['db'] and not netdata_kickstart_installed.stat.exists
+  tags: [netdata]
+
+- name: Download netdata official kickstart installer (db hosts)
+  ansible.builtin.get_url:
+    url: https://get.netdata.cloud/kickstart.sh
+    dest: /tmp/netdata-kickstart.sh
+    mode: '0755'
+  when: inventory_hostname in groups['db'] and not netdata_kickstart_installed.stat.exists
+  tags: [netdata]
+
+- name: Install netdata via official kickstart installer (db hosts, for go.d.plugin/MySQL collector)
+  ansible.builtin.command: sh /tmp/netdata-kickstart.sh --non-interactive --stable-channel --disable-telemetry
+  become: true
+  when: inventory_hostname in groups['db'] and not netdata_kickstart_installed.stat.exists
   tags: [netdata]
 
 - name: Update netdata config
@@ -45,6 +88,39 @@
     backup: true
   become: true
   when: inventory_hostname not in groups['pprotein']
+  tags: [netdata]
+
+- name: Create netdata MySQL monitoring user with minimal (read-only status) privileges (db hosts only)
+  ansible.builtin.shell: >
+    mysql -e "CREATE USER IF NOT EXISTS 'netdata'@'localhost';
+    GRANT PROCESS, REPLICATION CLIENT ON *.* TO 'netdata'@'localhost';
+    FLUSH PRIVILEGES;"
+  become: true
+  when: inventory_hostname in groups['db']
+  changed_when: false
+  tags: [netdata]
+
+- name: Ensure /etc/netdata/go.d directory exists (db hosts only)
+  ansible.builtin.file:
+    path: /etc/netdata/go.d
+    state: directory
+    mode: '0755'
+  become: true
+  when: inventory_hostname in groups['db']
+  tags: [netdata]
+
+- name: Deploy go.d MySQL collector config (db hosts only)
+  ansible.builtin.copy:
+    dest: /etc/netdata/go.d/mysql.conf
+    content: |
+      jobs:
+        - name: local
+          dsn: netdata@unix(/var/run/mysqld/mysqld.sock)/
+    owner: root
+    group: netdata
+    mode: '0640'
+  become: true
+  when: inventory_hostname in groups['db']
   tags: [netdata]
 
 - name: Restart netdata service
