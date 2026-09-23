@@ -123,6 +123,26 @@
   when: inventory_hostname in groups['db']
   tags: [netdata]
 
+- name: Deploy custom apps.plugin process-group definitions (webapp hosts only)
+  ansible.builtin.template:
+    src: apps_groups_custom.conf.j2
+    dest: /etc/netdata/apps_groups_isucon_custom.conf
+    mode: '0644'
+  become: true
+  when: inventory_hostname in groups['webapp']
+  tags: [netdata]
+
+# /etc/netdata/apps_groups.conf, if present, fully replaces netdata's
+# stock apps_groups.conf rather than merging with it -- there is no
+# built-in include mechanism -- so this concatenates the custom entries
+# ahead of a fresh copy of the stock file every run, rather than
+# maintaining a stale full copy of ~400+ stock lines in this repo.
+- name: Merge custom process groups ahead of netdata's stock apps_groups.conf (webapp hosts only)
+  ansible.builtin.shell: cat /etc/netdata/apps_groups_isucon_custom.conf /usr/lib/netdata/conf.d/apps_groups.conf > /etc/netdata/apps_groups.conf
+  become: true
+  when: inventory_hostname in groups['webapp']
+  tags: [netdata]
+
 - name: Restart netdata service
   ansible.builtin.shell: systemctl restart netdata
   become: true

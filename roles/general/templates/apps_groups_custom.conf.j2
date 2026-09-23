@@ -1,0 +1,12 @@
+# ISUCON app-specific process groups. Netdata's apps.plugin only groups
+# processes into per-group CPU/mem/IO charts (app.<group>_*) for names
+# matching a pattern in apps_groups.conf; our own binaries don't match any
+# stock pattern and were silently falling into the generic "other" group.
+# These entries are prepended to netdata's stock apps_groups.conf (see the
+# "Merge" task in tasks/main.yaml) rather than replacing it, since
+# /etc/netdata/apps_groups.conf fully overrides the stock file if present
+# (no merging by netdata itself) and the stock file's ~20 other groups
+# (auth, cron, dns, kernel, ssh, sql for mysqld, ...) are still useful.
+isuride: isuride
+isuride-payment_mock: payment_mock
+nginx: nginx*
