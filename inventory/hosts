@@ -2,16 +2,18 @@
 ansible_user=isucon
 ansible_ssh_private_key_file=/home/itohdak/.ssh/isucon_id_rsa
 
-# ISUCON12 qualify practice (stack isucon12-qualify).
-# s3 = bench + pprotein + netdata parent. s1/s2 are the two load-targeted hosts, kept symmetric.
+# ISUCON12 qualify practice (stack isucon12-qualify, 4-host layout).
+# s4 = bench + pprotein + netdata parent. s1/s2/s3 are the three competition servers, kept symmetric.
 [pprotein]
-s3 ansible_host=54.249.223.82 private_ip=192.168.0.13
+s4 ansible_host=57.182.197.30 private_ip=192.168.0.14
 
 [webapp]
 s1 ansible_host=13.159.132.116 private_ip=192.168.0.11
 s2 ansible_host=13.115.203.32 private_ip=192.168.0.12
+s3 ansible_host=54.249.223.82 private_ip=192.168.0.13
 
-# Both run (or will run) MySQL, so both get the go.d MySQL collector and slowlog access.
+# Any competition server can run MySQL, so all get the go.d MySQL collector and slowlog access.
 [db]
 s1 ansible_host=13.159.132.116 private_ip=192.168.0.11
 s2 ansible_host=13.115.203.32 private_ip=192.168.0.12
+s3 ansible_host=54.249.223.82 private_ip=192.168.0.13

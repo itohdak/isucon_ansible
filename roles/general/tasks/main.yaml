@@ -112,6 +112,8 @@
   become: true
   when: inventory_hostname in groups['db']
   changed_when: false
+  # a db-group host whose MySQL was split away (stopped) must not fail the whole play
+  failed_when: false
   tags: [netdata]
 
 - name: Ensure /etc/netdata/go.d directory exists (db hosts only)

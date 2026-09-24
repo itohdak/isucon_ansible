@@ -7,14 +7,14 @@
   },
   {
     "Type": "httplog",
-    "Label": "nginx-s1",
-    "URL": "http://s1:19000/debug/log/httplog",
+    "Label": "nginx-s2",
+    "URL": "http://s2:19000/debug/log/httplog",
     "Duration": 90
   },
   {
     "Type": "slowlog",
-    "Label": "mysql-s1",
-    "URL": "http://s1:19000/debug/log/slowlog",
+    "Label": "mysql-s2",
+    "URL": "http://s2:19000/debug/log/slowlog",
     "Duration": 90
   }
 ]
