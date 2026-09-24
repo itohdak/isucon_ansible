@@ -3,10 +3,13 @@ ansible_user=ubuntu
 ansible_ssh_private_key_file=/home/itohdak/.ssh/isucon.pem
 
 [pprotein]
-s3 ansible_host=35.76.34.10 private_ip=192.168.0.13
+s4 ansible_host=54.95.242.1 private_ip=192.168.0.14
 
 [webapp]
 s1 ansible_host=35.79.95.206 private_ip=192.168.0.11
 
+# s2 = app MySQL host, s3 = DNS host (pdns + its isudns MySQL). Both run MySQL, so both
+# get the kickstart netdata (go.d MySQL collector) and pprotein-agent (slowlog).
 [db]
 s2 ansible_host=13.193.230.57 private_ip=192.168.0.12
+s3 ansible_host=35.76.34.10 private_ip=192.168.0.13

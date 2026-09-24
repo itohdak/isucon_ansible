@@ -16,5 +16,11 @@
     "Label": "mysql-s2",
     "URL": "http://s2:19000/debug/log/slowlog",
     "Duration": 60
+  },
+  {
+    "Type": "slowlog",
+    "Label": "mysql-dns-s3",
+    "URL": "http://s3:19000/debug/log/slowlog",
+    "Duration": 60
   }
 ]
