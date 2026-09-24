@@ -3,3 +3,7 @@
 # needs to match between parent and children; regenerate with `uuidgen`
 # if you want a fresh one (e.g. before a new competition).
 netdata_stream_api_key: c245bd0d-2025-42cd-ab32-43273d85b8a3
+
+# MySQL client invocation used by ansible to create the netdata monitoring user.
+# ISUCON12's AMI protects root with a password (root/root), unlike ISUCON13/14 (socket auth).
+mysql_cli: mysql -uroot -proot

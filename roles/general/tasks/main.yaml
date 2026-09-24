@@ -1,3 +1,15 @@
+- name: Disable unattended-upgrades and apt timers (they burn CPU for ~30-60 min after first boot and distort scores)
+  ansible.builtin.systemd_service:
+    name: "{{ item }}"
+    state: stopped
+    enabled: false
+  become: true
+  loop:
+    - unattended-upgrades.service
+    - apt-daily.timer
+    - apt-daily-upgrade.timer
+  tags: [apt]
+
 - name: Install the latest version of graphviz and gv
   ansible.builtin.apt:
     name:
@@ -94,7 +106,7 @@
 
 - name: Create netdata MySQL monitoring user with minimal (read-only status) privileges (db hosts only)
   ansible.builtin.shell: >
-    mysql -e "CREATE USER IF NOT EXISTS 'netdata'@'localhost';
+    {{ mysql_cli }} -e "CREATE USER IF NOT EXISTS 'netdata'@'localhost';
     GRANT PROCESS, REPLICATION CLIENT ON *.* TO 'netdata'@'localhost';
     FLUSH PRIVILEGES;"
   become: true

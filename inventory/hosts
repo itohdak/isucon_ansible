@@ -1,15 +1,17 @@
 [all:vars]
-ansible_user=ubuntu
-ansible_ssh_private_key_file=/home/itohdak/.ssh/isucon.pem
+ansible_user=isucon
+ansible_ssh_private_key_file=/home/itohdak/.ssh/isucon_id_rsa
 
+# ISUCON12 qualify practice (stack isucon12-qualify).
+# s3 = bench + pprotein + netdata parent. s1/s2 are the two load-targeted hosts, kept symmetric.
 [pprotein]
-s4 ansible_host=54.95.242.1 private_ip=192.168.0.14
+s3 ansible_host=54.249.223.82 private_ip=192.168.0.13
 
 [webapp]
-s1 ansible_host=35.79.95.206 private_ip=192.168.0.11
+s1 ansible_host=13.159.132.116 private_ip=192.168.0.11
+s2 ansible_host=13.115.203.32 private_ip=192.168.0.12
 
-# s2 = app MySQL host, s3 = DNS host (pdns + its isudns MySQL). Both run MySQL, so both
-# get the kickstart netdata (go.d MySQL collector) and pprotein-agent (slowlog).
+# Both run (or will run) MySQL, so both get the go.d MySQL collector and slowlog access.
 [db]
-s2 ansible_host=13.193.230.57 private_ip=192.168.0.12
-s3 ansible_host=35.76.34.10 private_ip=192.168.0.13
+s1 ansible_host=13.159.132.116 private_ip=192.168.0.11
+s2 ansible_host=13.115.203.32 private_ip=192.168.0.12
