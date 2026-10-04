@@ -1,17 +1,16 @@
 matching_groups:
   - ^/initialize$
-  - ^/api/me$
-  - ^/api/admin/tenants/add$
-  - ^/api/admin/tenants/billing
-  - ^/api/organizer/players$
-  - ^/api/organizer/players/add$
-  - ^/api/organizer/player/[^/]+/disqualified$
-  - ^/api/organizer/competitions/add$
-  - ^/api/organizer/competition/[^/]+/finish$
-  - ^/api/organizer/competition/[^/]+/score$
-  - ^/api/organizer/billing$
-  - ^/api/organizer/competitions$
-  - ^/api/player/player/[^/]+$
-  - ^/api/player/competition/[^/]+/ranking
-  - ^/api/player/competitions$
-  - ^/auth/
+  - ^/api/auth$
+  - ^/api/signout$
+  - ^/api/user/me$
+  - ^/api/isu$
+  - ^/api/isu/[^/]+$
+  - ^/api/isu/[^/]+/icon$
+  - ^/api/isu/[^/]+/graph$
+  - ^/api/condition/[^/]+$
+  - ^/api/trend$
+  - ^/isu/[^/]+$
+  - ^/isu/[^/]+/condition$
+  - ^/isu/[^/]+/graph$
+  - ^/register$
+  - ^/assets/

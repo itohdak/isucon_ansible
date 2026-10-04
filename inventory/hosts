@@ -1,19 +1,20 @@
 [all:vars]
 ansible_user=isucon
-ansible_ssh_private_key_file=/home/itohdak/.ssh/isucon_id_rsa
+ansible_ssh_private_key_file=/home/itohdak/.ssh/isucon.pem
 
-# ISUCON12 qualify practice (stack isucon12-qualify, 4-host layout).
-# s4 = bench + pprotein + netdata parent. s1/s2/s3 are the three competition servers, kept symmetric.
+# ISUCON11 qualify practice (stacks isucon11-qualify + isucon11-qualify-pprotein, 4-host layout).
+# s4 = bench + pprotein + netdata parent (CloudFormation tag isucon11-qualify-4-bench-pprotein).
+# s1/s2/s3 are the three competition servers, each a self-contained isucondition+MySQL+jiaapi-mock stack, kept symmetric.
 [pprotein]
-s4 ansible_host=57.181.86.161 private_ip=192.168.0.14
+s4 ansible_host=13.159.142.24 private_ip=192.168.0.100
 
 [webapp]
-s1 ansible_host=57.181.139.41 private_ip=192.168.0.11
-s2 ansible_host=54.178.187.119 private_ip=192.168.0.12
-s3 ansible_host=13.197.1.132 private_ip=192.168.0.13
+s1 ansible_host=54.168.5.117 private_ip=192.168.0.11
+s2 ansible_host=52.197.118.176 private_ip=192.168.0.12
+s3 ansible_host=18.177.190.215 private_ip=192.168.0.13
 
-# Any competition server can run MySQL, so all get the go.d MySQL collector and slowlog access.
+# Every competition server runs its own local MySQL (isucondition), so all get the go.d MySQL collector.
 [db]
-s1 ansible_host=57.181.139.41 private_ip=192.168.0.11
-s2 ansible_host=54.178.187.119 private_ip=192.168.0.12
-s3 ansible_host=13.197.1.132 private_ip=192.168.0.13
+s1 ansible_host=54.168.5.117 private_ip=192.168.0.11
+s2 ansible_host=52.197.118.176 private_ip=192.168.0.12
+s3 ansible_host=18.177.190.215 private_ip=192.168.0.13

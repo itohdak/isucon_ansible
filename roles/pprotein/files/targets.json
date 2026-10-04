@@ -7,6 +7,24 @@
   },
   {
     "Type": "httplog",
+    "Label": "nginx-s1",
+    "URL": "http://s1:19000/debug/log/httplog",
+    "Duration": 90
+  },
+  {
+    "Type": "slowlog",
+    "Label": "mysql-s1",
+    "URL": "http://s1:19000/debug/log/slowlog",
+    "Duration": 90
+  },
+  {
+    "Type": "pprof",
+    "Label": "webapp-s2",
+    "URL": "http://s2:8888/debug/pprof/profile",
+    "Duration": 90
+  },
+  {
+    "Type": "httplog",
     "Label": "nginx-s2",
     "URL": "http://s2:19000/debug/log/httplog",
     "Duration": 90
@@ -15,6 +33,24 @@
     "Type": "slowlog",
     "Label": "mysql-s2",
     "URL": "http://s2:19000/debug/log/slowlog",
+    "Duration": 90
+  },
+  {
+    "Type": "pprof",
+    "Label": "webapp-s3",
+    "URL": "http://s3:8888/debug/pprof/profile",
+    "Duration": 90
+  },
+  {
+    "Type": "httplog",
+    "Label": "nginx-s3",
+    "URL": "http://s3:19000/debug/log/httplog",
+    "Duration": 90
+  },
+  {
+    "Type": "slowlog",
+    "Label": "mysql-s3",
+    "URL": "http://s3:19000/debug/log/slowlog",
     "Duration": 90
   }
 ]
